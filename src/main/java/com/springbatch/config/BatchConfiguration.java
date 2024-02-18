@@ -16,6 +16,7 @@ import com.springbatch.processor.FirstItemProcessor;
 import com.springbatch.reader.FirstItemReader;
 import com.springbatch.service.SecondTasklet;
 import com.springbatch.writer.FirstItemWriter;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class BatchConfiguration {
@@ -72,7 +73,7 @@ public class BatchConfiguration {
 
 	@Bean
 	public Job myJob() {
-		return jobBuilderFactory.get("my job")
+		return jobBuilderFactory.get("my-job")
 				.incrementer(new RunIdIncrementer())
 				.start(firstStep())
 				.next(firstChunkStep())
@@ -81,14 +82,14 @@ public class BatchConfiguration {
 				.build();
 	}
 
-//    @Bean
-//    public Job anotherJob() {
-//        return jobBuilderFactory.get("First Job")
-//                .incrementer(new RunIdIncrementer())
-//                .start(firstStep())
-//                .next(secondStep())
-//                .listener(myJobListener)
-//                .build();
-//    }
+    @Bean
+    public Job anotherJob() {
+        return jobBuilderFactory.get("second-job")
+                .incrementer(new RunIdIncrementer())
+                .start(firstStep())
+                .next(secondStep())
+                .listener(myJobListener)
+                .build();
+    }
 
 }
